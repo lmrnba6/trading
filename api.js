@@ -7,7 +7,7 @@ let data = {}
 
 async function getData() {
     // Start the browser and open a new page
-    const browser = await puppeteer.launch({ headless: 'new' });
+    const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     const page = await browser.newPage();
 
     // Set a common User-Agent to reduce chances of being blocked
