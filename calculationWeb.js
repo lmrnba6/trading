@@ -3,7 +3,7 @@ const {calculatePmiRating, calculateUmsciRating, calculateBuildingPermitRating} 
 const {NPMI_URL, PMI_URL} = require("./constants");
 
 async function calculate(page, type) {
-    await page.goto(type, {waitUntil: ['load', 'domcontentloaded', 'networkidle0']});
+    await page.goto(type, {waitUntil: ['load', 'domcontentloaded', 'networkidle0'],timeout: 60000});
     const data = await page.evaluate((type) => {
         return new Promise(async (resolve) => {
             const row = document.querySelector("#ctl00_ContentPlaceHolder1_ctl00_ctl02_Panel1 .table tbody tr");
