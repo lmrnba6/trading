@@ -3,7 +3,19 @@ const {calculatePmiRating, calculateUmsciRating, calculateBuildingPermitRating} 
 const {NPMI_URL, PMI_URL} = require("./constants");
 
 async function calculate(page, type) {
-    await page.goto(type, {waitUntil: ['load', 'domcontentloaded', 'networkidle0'],timeout: 60000});
+    await page.goto(type, {waitUntil: ['load', 'domcontentloaded', 'networkidle0'],timeout: 90000});
+    page.on('error', (err) => {
+        console.error('Page error:', err);
+    });
+
+    page.on('pageerror', (pageErr) => {
+        console.error('Unhandled exception on page:', pageErr);
+    });
+
+    page.on('requestfailed', (request) => {
+        console.error(`Request failed: ${request.url()}, ${request.failure().errorText}`);
+    });
+
     const data = await page.evaluate((type) => {
         return new Promise(async (resolve) => {
             const row = document.querySelector("#ctl00_ContentPlaceHolder1_ctl00_ctl02_Panel1 .table tbody tr");
