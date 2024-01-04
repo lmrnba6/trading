@@ -3,7 +3,7 @@ const {calculatePmiRating, calculateUmsciRating, calculateBuildingPermitRating} 
 const {NPMI_URL, PMI_URL} = require("./constants");
 
 async function calculate(page, type) {
-    await page.goto(type, {waitUntil: ['load', 'domcontentloaded', 'networkidle0'],timeout: 90000});
+    await page.goto(type, {waitUntil: ['load', 'domcontentloaded', 'networkidle0'],timeout: 90000, args: ['--no-sandbox', '--disable-web-security']});
     page.on('error', (err) => {
         console.error('Page error:', err);
     });
