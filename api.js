@@ -1,17 +1,16 @@
-const puppeteer = require('puppeteer');
-const axios = require('axios');
 const express = require('express');
 const app = express();
 const PORT = 3000;
 const {executeWeb} = require("./calculationWeb");
 const {executeApi} = require("./calculationApi");
 const {main} = require("./cftc");
-let result = {}
-let data = {}
-let html = ``
-let cftc = ''
+
 
 async function getData() {
+    let result = {}
+    let data = {}
+    let html = ``
+    let cftc = ''
 
     const {pmi, npmi} = await executeWeb()
 
@@ -409,21 +408,24 @@ async function getData() {
     </body>
 </html>
     `;
+    return {html: html + cftc?.html, result}
 }
 
 
 
     app.get('/', async (req, res) => {
-        res.send(html + cftc?.html);
+        const {html} = await getData()
+        res.send(html);
     });
 
     app.get('/data', async (req, res) => {
+        const {result} = await getData()
+        const {ticker} = req.body
         res.json(result);
     });
 
 
     app.listen(PORT, () => {
-        getData()
         console.log(`Server is running on http://localhost:${PORT}`);
     });
 

@@ -210,7 +210,7 @@ async function main() {
 
         const data = {}
         for (const keyword in keywordLists) {
-            keywordLists[keyword] = keywordLists[keyword].slice(-1);
+            keywordLists[keyword] = keywordLists[keyword].slice(-4);
         }
 
         Object.keys(keywordLists).forEach(k => {
