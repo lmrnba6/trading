@@ -419,7 +419,7 @@ async function getData() {
     // });
 
     app.post('/', async (req, res) => {
-       console.log(req.body)
+       console.log(req)
     });
 
 
