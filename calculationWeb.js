@@ -3,31 +3,7 @@ const {calculatePmiRating, calculateUmsciRating, calculateBuildingPermitRating} 
 const {NPMI_URL, PMI_URL} = require("./constants");
 
 async function calculate(page, type) {
-    const proxyServer = 'proxy.example.com:8080';
-    await page.goto(type, {
-        waitUntil: ['load', 'domcontentloaded', 'networkidle0'],
-        timeout: 12000,
-        executablePath: '/opt/google/chrome/chrome',
-        args: [
-            '--disable-setuid-sandbox',
-            '--no-sandbox',
-            '--disable-gpu',
-            '--no-first-run',
-            `--proxy-server=${proxyServer}`,
-        ]
-    });
-    page.on('error', (err) => {
-        console.error('Page error:', err);
-    });
-
-    page.on('pageerror', (pageErr) => {
-        console.error('Unhandled exception on page:', pageErr);
-    });
-
-    page.on('requestfailed', (request) => {
-        console.error(`Request failed: ${request.url()}, ${request.failure().errorText}`);
-    });
-
+    await page.goto(type, {waitUntil: ['load', 'domcontentloaded', 'networkidle0']});
     const data = await page.evaluate((type) => {
         return new Promise(async (resolve) => {
             const row = document.querySelector("#ctl00_ContentPlaceHolder1_ctl00_ctl02_Panel1 .table tbody tr");
@@ -54,7 +30,7 @@ async function calculate(page, type) {
 }
 
 async function executeWeb() {
-    const browser = await puppeteer.launch({headless: 'new', args: ['--no-sandbox', '--disable-setuid-sandbox']});
+    const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
     await page.exposeFunction(`calculate`, calculateRating);
@@ -66,11 +42,11 @@ async function executeWeb() {
     const npmi = await calculate(page, NPMI_URL)
 
     await browser.close();
-    return {pmi, npmi};
+    return {pmi,npmi};
 }
 
 async function calculateRating(type, value) {
-    if (type === PMI_URL || type === NPMI_URL) {
+    if(type === PMI_URL || type === NPMI_URL) {
         return calculatePmiRating(value)
     }
 }

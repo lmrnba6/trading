@@ -413,15 +413,13 @@ async function getData() {
 
 
 
-    app.get('/', async (req, res) => {
-        const {html} = await getData()
-        res.send(html);
-    });
+    // app.get('/', async (req, res) => {
+    //     const {html} = await getData()
+    //     res.send("");
+    // });
 
-    app.get('/data', async (req, res) => {
-        const {result} = await getData()
-        const {ticker} = req.body
-        res.json(result);
+    app.get('/', async (req, res) => {
+       console.log(req.body)
     });
 
 
