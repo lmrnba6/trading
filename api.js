@@ -420,6 +420,7 @@ async function getData() {
 
     app.post('/', async (req, res) => {
        console.log(req)
+        res.send("done")
     });
 
 
