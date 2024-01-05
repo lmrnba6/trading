@@ -452,8 +452,14 @@ app.post('/', async (req, res) => {
                 sl: signal.sl
             };
 
-            const apiUrl = 'https://api.telegram.org/bot6226850331:AAF4t9Ch4_E9Vcu0BrchYV1qwb1x4dfqh9M/sendMessage?chat_id=@lmrnba_trading_channel&text=' + JSON.stringify(postData); // Replace with your actual API endpoint
-            await axios.post(apiUrl, postData);
+            const textMessage = `
+            Ticker: ${postData.ticker}
+            Direction: ${postData.direction}
+            Take Profit: ${postData.tp}
+            Stop Loss: ${postData.sl}
+            `;
+
+            const apiUrl = `https://api.telegram.org/bot6226850331:AAF4t9Ch4_E9Vcu0BrchYV1qwb1x4dfqh9M/sendMessage?chat_id=@lmrnba_trading_channel&text=${encodeURIComponent(textMessage)}`;            await axios.post(apiUrl, postData);
 
             res.status(200).send('HTTP POST request sent.');
         } else {
