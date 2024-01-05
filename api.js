@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.json());
 const PORT = 3000;
 const {executeWeb} = require("./calculationWeb");
 const {executeApi} = require("./calculationApi");
