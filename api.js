@@ -419,10 +419,54 @@ async function getData() {
     //     res.send("");
     // });
 
-    app.post('/', async (req, res) => {
-       console.log(req.body)
-        res.send("done")
-    });
+app.post('/', async (req, res) => {
+    try {
+        const { analysis } = await main();
+        const signalString = req.body.body; // Assuming "body" is the key in your incoming request
+
+        if (!signalString) {
+            return res.status(400).send('Invalid signal format');
+        }
+
+        const signalArray = signalString.split(' ');
+
+        // Assuming that signalArray is ["ticker:GBPJPY", "direction:buy", "tp:191.185", "sl:178.73"]
+        const signal = signalArray.reduce((acc, item) => {
+            const [key, value] = item.split(':');
+            acc[key] = value;
+            return acc;
+        }, {});
+
+        const baseCurrency = signal.ticker.substring(0, 3).toLowerCase(); // Extract base currency from the ticker
+
+        const analysisDirection = analysis[baseCurrency];
+        const signalDirection = signal.direction;
+
+        if (analysisDirection && signalDirection && analysisDirection === signalDirection) {
+            // Base currency direction matches the signal direction
+            // Make an HTTP POST request to the desired URL
+            const postData = {
+                ticker: signal.ticker,
+                direction: signal.direction,
+                tp: signal.tp,
+                sl: signal.sl
+            };
+
+            const apiUrl = 'https://api.telegram.org/bot6226850331:AAF4t9Ch4_E9Vcu0BrchYV1qwb1x4dfqh9M/sendMessage?chat_id=@lmrnba_trading_channel&text=' + JSON.stringify(postData); // Replace with your actual API endpoint
+            await axios.post(apiUrl, postData);
+
+            res.status(200).send('HTTP POST request sent.');
+        } else {
+            // Do nothing or respond with a different status/message if needed
+            res.status(200).send('No action taken.');
+        }
+    } catch (error) {
+        // Handle errors appropriately
+        console.error('Error:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 
     app.listen(PORT, () => {
